@@ -21,5 +21,5 @@ class Board:
             for row_index in range(1, 7, 1):
                 cell = Cell(self.window, col_index, row_index)
                 self.cells.update({
-                    f'{col_index}x{row_index}': cell
+                    f'{col_index}x{row_index-1}': cell
                 })
