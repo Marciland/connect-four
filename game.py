@@ -15,7 +15,7 @@ class ConnectFour:
 
         self.board = Board(window=self.root)
         for index, entry_point in self.board.entry_points.items():
-            entry_point.configure(command=lambda i=index: self._drop_coin(i))
+            entry_point.widget.configure(command=lambda i=index: self._drop_coin(i))
         # TODO manipulate this way:
         # self.board.cells['0x1']
 
