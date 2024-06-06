@@ -1,15 +1,3 @@
-grid
-
-click on square
-
-add coins based on click location
-
-1 vs 2 alternate every click
-
 every "turn" check state
 
 states = win/lose/remi
-
-width 7, height 6
-
-render coin on hover
