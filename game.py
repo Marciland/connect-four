@@ -11,17 +11,27 @@ class ConnectFour:
         self.width = 700
         self.height = 700
         self.current_player = 1
-
         self._configure_window()
+        self._prepare_new_game()
 
+    def _prepare_new_game(self) -> None:
+        '''Sets up new binds for a new game.'''
         self.board = Board(window=self.root)
         for index, entry_point in self.board.entry_points.items():
+            entry_point.widget.configure(state='normal')
             entry_point.widget.configure(command=lambda i=index:
                                          self._drop_coin(i))
             entry_point.widget.bind("<Enter>", lambda _, entry=entry_point:
                                     entry.change_state(self.current_player))
             entry_point.widget.bind("<Leave>", lambda _, entry=entry_point:
                                     entry.change_state(0))
+
+    def _end_game(self) -> None:
+        '''Stops interactivity.'''
+        for _, entry_point in self.board.entry_points.items():
+            entry_point.widget.configure(state='disabled')
+            entry_point.widget.unbind("<Enter>")
+            entry_point.widget.unbind("<Leave>")
 
     def _configure_window(self) -> None:
         '''
@@ -54,7 +64,7 @@ class ConnectFour:
         affected_cells = []
         for pos, cell in self.board.cells.items():
             # position is 'colxrow'
-            if len(affected_cells) == 6:
+            if len(affected_cells) == self.board.rows:
                 break
             if f'{col_index}x' not in pos:
                 continue
@@ -63,12 +73,33 @@ class ConnectFour:
         affected_cells.reverse()
         coin_dropped = False
         for cell in affected_cells:
-            if cell[1].is_empty:
+            if cell[1].is_empty():
                 cell[1].change_state(self.current_player)
                 coin_dropped = True
                 break
         # only change current player if a coin was actually dropped
-        if coin_dropped:
-            self.board.entry_points[col_index].change_state(0)
-            # TODO: check win condition here, current_player can win, else change current_player
-            self.current_player = 1 if self.current_player == 2 else 2
+        if not coin_dropped:
+            return
+        self.board.entry_points[col_index].change_state(0)
+        if self._game_ends():
+            print(f'Game ended. Player {self.current_player} has won!')
+            self._end_game()
+            # TODO: display winning player and restart option?
+            return
+        self.current_player = 1 if self.current_player == 2 else 2
+        # TODO: display current player 'Player X's turn'
+
+    def _game_ends(self) -> bool:
+        '''
+        Checks the game state.
+        A game ends if:
+            - the board is full -> draw
+            - any player has 4 vertically -> win
+            - any player has 4 horizontally -> win
+            - any player has 4 diagonally -> win
+        '''
+        if self.board.is_full():
+            return True
+        if self.board.connected_four():
+            return True
+        return False

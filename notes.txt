@@ -1,3 +1,0 @@
-every "turn" check state
-
-states = win/lose/remi

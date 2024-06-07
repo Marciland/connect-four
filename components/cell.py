@@ -10,7 +10,7 @@ class Cell:
         self.window = window
         self.col_index = col_index
         self.row_index = row_index
-        self.is_empty = True
+        self.current_player = 0
         cwd = getcwd()
         self.empty_image = ttk.PhotoImage(file=path.join(cwd,
                                                          'res/empty_board.png'))
@@ -33,8 +33,18 @@ class Cell:
         match player:
             case 1:
                 self.widget.configure(image=self.player1_image)
+                self.current_player = 1
             case 2:
                 self.widget.configure(image=self.player2_image)
+                self.current_player = 2
             case _:
                 raise NotImplementedError(f'Player {player} not supported!')
-        self.is_empty = False
+
+    def is_empty(self) -> bool:
+        '''
+        Cells are empty if no color is rendered.
+        Thus current_player is at its default value.
+        '''
+        if self.current_player == 0:
+            return True
+        return False
