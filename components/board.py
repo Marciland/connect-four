@@ -21,7 +21,7 @@ class Board:
             entry_point = EntryPoint(self.window, col_index)
             self.entry_points.update({col_index: entry_point})
             for row_index in range(0, self.rows, 1):
-                cell = Cell(self.window, col_index, row_index+1)
+                cell = Cell(self.window, col_index, row_index)
                 self.cells.update({
                     f'{col_index}x{row_index}': cell
                 })

@@ -24,7 +24,8 @@ class Cell:
         '''Creates a new cell in its initial state.'''
         self.widget = ttk.Label(self.window, image=self.empty_image)
         self.widget.place(x=100 * self.col_index,
-                          y=100 * self.row_index,
+                          # y + 100 because of the EntryPoints above
+                          y=100 + 100 * self.row_index,
                           width=100,
                           height=100)
 
