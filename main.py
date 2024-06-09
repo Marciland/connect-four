@@ -1,6 +1,6 @@
 '''main entry point for the game.'''
-from game import ConnectFour
+from components import MainWindow
 
 if __name__ == '__main__':
-    connect_four = ConnectFour()
-    connect_four.run()
+    window = MainWindow()
+    window.mainloop()

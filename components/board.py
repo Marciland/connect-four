@@ -1,6 +1,5 @@
 '''component class for managing the board.'''
-from .cell import Cell
-from .entry_point import EntryPoint
+from assets import Cell, EntryPoint
 
 
 class Board:
@@ -10,8 +9,8 @@ class Board:
         self.window = window
         self.rows = 6
         self.cols = 7
-        self.entry_points = {}
-        self.cells = {}
+        self.entry_points: dict[int, EntryPoint] = {}
+        self.cells: dict[str, Cell] = {}
 
         self._prepare_board()
 
@@ -65,7 +64,7 @@ class Board:
     def _vertical_connected_four(self) -> bool:
         '''True if 4 of the same color are vertically connected'''
         cells_by_col = [self._get_cells_in_col(col_index) for col_index
-                        in range(0, self.rows)]
+                        in range(0, self.cols)]
         for col in cells_by_col:
             if self._has_4_connected(col):
                 return True

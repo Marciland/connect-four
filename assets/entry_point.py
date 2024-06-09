@@ -1,6 +1,6 @@
 '''entry point component'''
-import tkinter as ttk
 from os import getcwd, path
+from tkinter import Button, PhotoImage
 
 
 class EntryPoint:
@@ -10,16 +10,15 @@ class EntryPoint:
         self.window = window
         self.col_index = col_index
         cwd = getcwd()
-        self.empty_image = ttk.PhotoImage(file=path.join(cwd,
-                                                         'res/empty_entry.png'))
-        self.player1_image = ttk.PhotoImage(file=path.join(cwd,
-                                                           'res/purple_entry.png'))
-        self.player2_image = ttk.PhotoImage(file=path.join(cwd,
-                                                           'res/yellow_entry.png'))
+        self.images = {
+            'empty': PhotoImage(file=path.join(cwd, 'res/empty_entry.png')),
+            'player1': PhotoImage(file=path.join(cwd, 'res/purple_entry.png')),
+            'player2': PhotoImage(file=path.join(cwd, 'res/yellow_entry.png'))
+        }
         self._prepare_entry_point()
 
     def _prepare_entry_point(self) -> None:
-        self.widget = ttk.Button(self.window, image=self.empty_image)
+        self.widget = Button(self.window, image=self.images['empty'])
         self.widget.place(x=100 * self.col_index,
                           y=0,
                           width=100,
@@ -30,10 +29,10 @@ class EntryPoint:
         match player:
             case 0:
                 # 0 equals no player and renders empty
-                self.widget.configure(image=self.empty_image)
+                self.widget.configure(image=self.images['empty'])
             case 1:
-                self.widget.configure(image=self.player1_image)
+                self.widget.configure(image=self.images['player1'])
             case 2:
-                self.widget.configure(image=self.player2_image)
+                self.widget.configure(image=self.images['player2'])
             case _:
                 raise NotImplementedError(f'Player {player} not supported!')
