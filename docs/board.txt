@@ -1,5 +1,6 @@
 The board of connect four is designed to consist of cells.
-Each cell has a position in the following format: col x row
+Each cell has a position with col_index and row_index.
+Each cell is stored in the board.cells dictionary with a position in the following format: col x row
 A whole board of 7x6 would look like this:
 
 ['0x0', '1x0', '2x0', '3x0', '4x0', '5x0', '6x0']
@@ -9,5 +10,5 @@ A whole board of 7x6 would look like this:
 ['0x4', '1x4', '2x4', '3x4', '4x4', '5x4', '6x4']
 ['0x5', '1x5', '2x5', '3x5', '4x5', '5x5', '6x5']
 
-Where each cell renders an image, defaulting to empty_board.png.
+Where each cell renders an image, defaulting to empty_cell.png.
 If a player drops a coin, the cell where the coin ends renders that players color.
