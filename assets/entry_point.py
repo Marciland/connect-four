@@ -3,7 +3,7 @@ from os import getcwd, path
 from tkinter import Button, PhotoImage
 
 
-class EntryPoint:
+class EntryPoint:  # pylint: disable=too-few-public-methods
     '''Entry for the coins above the board'''
 
     def __init__(self, window, col_index) -> None:
@@ -11,9 +11,9 @@ class EntryPoint:
         self.col_index = col_index
         cwd = getcwd()
         self.images = {
-            'empty': PhotoImage(file=path.join(cwd, 'res/empty_entry.png')),
-            'player1': PhotoImage(file=path.join(cwd, 'res/purple_entry.png')),
-            'player2': PhotoImage(file=path.join(cwd, 'res/yellow_entry.png'))
+            'empty': PhotoImage(file=path.join(cwd, 'res/entry_point/empty_entry.png')),
+            'player1': PhotoImage(file=path.join(cwd, 'res/entry_point/purple_entry.png')),
+            'player2': PhotoImage(file=path.join(cwd, 'res/entry_point/yellow_entry.png'))
         }
         self._prepare_entry_point()
 
@@ -27,12 +27,15 @@ class EntryPoint:
     def change_state(self, player: int) -> None:
         '''Changes the visuals based on current player.'''
         match player:
-            case 0:
-                # 0 equals no player and renders empty
+            case -1:
+                # -1 equals no player and renders empty
                 self.widget.configure(image=self.images['empty'])
             case 1:
                 self.widget.configure(image=self.images['player1'])
             case 2:
+                self.widget.configure(image=self.images['player2'])
+            case 0:
+                # 0 equals bot and acts as player 2
                 self.widget.configure(image=self.images['player2'])
             case _:
                 raise NotImplementedError(f'Player {player} not supported!')

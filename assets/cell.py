@@ -3,19 +3,36 @@ from os import getcwd, path
 from tkinter import Label, PhotoImage
 
 
-class Cell:
+class AbstractCell:  # pylint: disable=too-few-public-methods
+    '''An abstract cell is for computing only and will not render anything.'''
+
+    def __init__(self, col_index: int, row_index: int) -> None:
+        self.col_index: int = col_index
+        self.row_index: int = row_index
+        self.current_player: int = -1
+
+    def is_empty(self) -> bool:
+        '''
+        Cells are empty if no color is rendered.
+        Thus current_player is at its default value.
+        '''
+        if self.current_player == -1:
+            return True
+        return False
+
+
+class Cell(AbstractCell):
     '''Cell component that represents a piece of the board.'''
 
     def __init__(self, window, col_index: int, row_index: int) -> None:
+        super().__init__(col_index=col_index,
+                         row_index=row_index)
         self.window = window
-        self.col_index = col_index
-        self.row_index = row_index
-        self.current_player = 0
         cwd = getcwd()
         self.images = {
-            'empty': PhotoImage(file=path.join(cwd, 'res/empty_board.png')),
-            'player1': PhotoImage(file=path.join(cwd, 'res/purple_board.png')),
-            'player2': PhotoImage(file=path.join(cwd, 'res/yellow_board.png'))
+            'empty': PhotoImage(file=path.join(cwd, 'res/cell/empty_cell.png')),
+            'player1': PhotoImage(file=path.join(cwd, 'res/cell/purple_cell.png')),
+            'player2': PhotoImage(file=path.join(cwd, 'res/cell/yellow_cell.png'))
         }
         self._prepare_cell()
 
@@ -37,14 +54,9 @@ class Cell:
             case 2:
                 self.widget.configure(image=self.images['player2'])
                 self.current_player = 2
+            case 0:
+                # bot is considered 0 and acts as player 2!
+                self.widget.configure(image=self.images['player2'])
+                self.current_player = 2
             case _:
                 raise NotImplementedError(f'Player {player} not supported!')
-
-    def is_empty(self) -> bool:
-        '''
-        Cells are empty if no color is rendered.
-        Thus current_player is at its default value.
-        '''
-        if self.current_player == 0:
-            return True
-        return False

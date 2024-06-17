@@ -1,7 +1,8 @@
 '''Contains a root window that renders the other components.'''
 from tkinter import Frame, Tk
 
-from components import ConnectFour, MainMenu
+from .game import ConnectFour
+from .menu import MainMenu, SettingsMenu
 
 
 class MainWindow(Tk):
@@ -9,9 +10,13 @@ class MainWindow(Tk):
 
     def __init__(self) -> None:
         super().__init__()
+        self.withdraw()
+        # show after rendering
+        self.after(0, self.deiconify)
         self.title('Vier Gewinnt | Connect Four')
         self.resizable(False, False)
         self.iconbitmap(r"res\icon.ico")
+        self.current_frame: Frame = None
         self.show_main_menu()
 
     def _get_geometry(self, width: int, height: int) -> str:
@@ -31,16 +36,31 @@ class MainWindow(Tk):
 
     def _update_frame(self, frame: Frame) -> None:
         '''Renders the given frame with its according size.'''
+        if self.current_frame:
+            self.current_frame.destroy()
         self.geometry(self._get_geometry(width=frame.width,
                                          height=frame.height))
-        frame.place(x=0, y=0,
-                    width=frame.width,
-                    height=frame.height)
+        frame.place(x=0, y=0, width=frame.width, height=frame.height)
+        self.current_frame = frame
 
     def show_main_menu(self) -> None:
         '''Renders the main menu.'''
-        self._update_frame(MainMenu(self))
+        self._update_frame(MainMenu(window=self))
+
+    def show_settings_menu(self) -> None:
+        '''Renders the settings menu.'''
+        self._update_frame(SettingsMenu(window=self))
+
+    def start_singleplayer(self) -> None:
+        '''Starts a solo game vs the computer.'''
+        singleplayer: ConnectFour = ConnectFour(window=self)
+        singleplayer.solo = True
+        singleplayer.new_game()
+        self._update_frame(singleplayer)
 
     def start_multiplayer(self) -> None:
         '''Starts a 2 player versus.'''
-        self._update_frame(ConnectFour(self))
+        multiplayer: ConnectFour = ConnectFour(window=self)
+        multiplayer.solo = False
+        multiplayer.new_game()
+        self._update_frame(multiplayer)
