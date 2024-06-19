@@ -1,5 +1,6 @@
 '''Contains a root window that renders the other components.'''
 from tkinter import Frame, Tk
+from typing import Any
 
 from .game import ConnectFour
 from .menu import MainMenu, SettingsMenu
@@ -17,6 +18,9 @@ class MainWindow(Tk):
         self.resizable(False, False)
         self.iconbitmap(r"res\icon.ico")
         self.current_frame: Frame = None
+        self.settings: dict[str, Any] = {
+            'difficulty': 0
+        }
         self.show_main_menu()
 
     def _get_geometry(self, width: int, height: int) -> str:
@@ -55,6 +59,7 @@ class MainWindow(Tk):
         '''Starts a solo game vs the computer.'''
         singleplayer: ConnectFour = ConnectFour(window=self)
         singleplayer.solo = True
+        singleplayer.difficulty = self.settings['difficulty']
         singleplayer.new_game()
         self._update_frame(singleplayer)
 
@@ -64,3 +69,11 @@ class MainWindow(Tk):
         multiplayer.solo = False
         multiplayer.new_game()
         self._update_frame(multiplayer)
+
+    def set_difficulty(self, difficulty: int) -> None:
+        '''Changes the difficulty to given value.'''
+        self.settings['difficulty'] = difficulty
+
+    def get_difficulty(self) -> int:
+        '''Gets the currently selected difficulty.'''
+        return self.settings['difficulty']
