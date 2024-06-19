@@ -2,7 +2,7 @@
 from time import perf_counter
 from tkinter import Frame, messagebox
 
-from assets import Cell
+from assets import Cell, Dimension
 from components import Board
 from helper import board_helper as BoardHelper
 from helper import bot_helper as BotHelper
@@ -17,8 +17,8 @@ class ConnectFour(Frame):
         self.solo = True
         self.difficulty = 0
         self.window = window
-        self.width = 700
-        self.height = 700
+        self.dimension: Dimension = Dimension(width=700,
+                                              height=700)
         self.current_player = 1
 
     def new_game(self) -> None:

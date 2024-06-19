@@ -1,6 +1,7 @@
 '''Helper functions that regulate bot behaviour.'''
 import random
 
+from assets import Difficulty
 from components import Board
 from helper import board_helper as BoardHelper
 
@@ -18,15 +19,18 @@ def calculate_next_move(difficulty: int, board: Board, possible_moves: list[int]
         - try to get 4 in a row by
         - other than that, are random
       Therefore hard should try to get a win.
+    - Extreme difficulty moves are:
+        - same as hard
+        - not dropping coins where the player could win next turn
     '''
-    if difficulty >= 2:
+    if difficulty >= Difficulty.HARD.value:
         # try to win
         for move in possible_moves:
             if _move_as(board=board,
                         move=move,
                         player=2):
                 return move
-    if difficulty >= 3:
+    if difficulty >= Difficulty.EXTREME.value:
         # make safe moves
         safe_moves = []
         for move in possible_moves:
@@ -38,7 +42,7 @@ def calculate_next_move(difficulty: int, board: Board, possible_moves: list[int]
                         player=1):
                 return move
         return random.choice(safe_moves)
-    if difficulty >= 1:
+    if difficulty >= Difficulty.MEDIUM.value:
         for move in possible_moves:
             # prevent win
             if _move_as(board=board,

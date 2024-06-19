@@ -11,3 +11,6 @@ This should always result in a draw.
 2 = Hard
 Hard will look for opportunities to win while preventing the player's win.
 This should result in a win for the bot or a draw.
+
+3 = Extreme
+Extreme acts like hard, but will make safer moves by checking if a move would help the player win.
