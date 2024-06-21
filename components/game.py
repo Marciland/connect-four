@@ -1,14 +1,19 @@
 '''Contains the games that can be played.'''
 from time import perf_counter
-from tkinter import Frame, messagebox
+from tkinter import Frame
+from typing import TYPE_CHECKING
 
-from assets import Cell, Dimension
-from components import Board
+from assets import Cell, EndMessage
 from helper import board_helper as BoardHelper
 from helper import bot_helper as BotHelper
 
+from .board import Board
 
-class ConnectFour(Frame):
+if TYPE_CHECKING:
+    from components import MainWindow
+
+
+class GameFrame(Frame):
     '''Provides a game frame with a connect four board.'''
 
     def __init__(self, window) -> None:
@@ -16,15 +21,13 @@ class ConnectFour(Frame):
         self.board: Board = None
         self.solo = True
         self.difficulty = 0
-        self.window = window
-        self.dimension: Dimension = Dimension(width=700,
-                                              height=700)
+        self.window: MainWindow = window
         self.current_player = 1
 
     def new_game(self) -> None:
         '''Sets up a new game.'''
         self.current_player = 1
-        self.board = Board(window=self)
+        self.board = Board(frame=self)
         for index, entry_point in self.board.entry_points.items():
             entry_point.widget.configure(state='normal')
             entry_point.widget.configure(command=lambda i=index:
@@ -86,19 +89,11 @@ class ConnectFour(Frame):
             entry_point.widget.configure(state='disabled')
             entry_point.widget.unbind("<Enter>")
             entry_point.widget.unbind("<Leave>")
-        player = 'Purple' if self.current_player == 1 else 'Yellow'
-        if self.current_player == 0:
-            player = 'Computer'
-        msg = f'{player} has won!\nPlay again?'
-        if remis:
-            msg = 'Draw!\nPlay again?'
-        replay_window = messagebox.Message(master=self,
-                                           icon=messagebox.QUESTION,
-                                           title='Game ends!',
-                                           message=msg,
-                                           type=messagebox.RETRYCANCEL)
-        response = replay_window.show()
-        if response == messagebox.RETRY:
+        title = self.window.translation.get('end_title')
+        end_message = EndMessage(frame=self,
+                                 title=title,
+                                 remis=remis)
+        if end_message.response:
             self.new_game()
-        if response == messagebox.CANCEL:
-            self.window.show_main_menu()
+            return
+        self.window.show_main_menu()

@@ -30,3 +30,15 @@ class Difficulty(Enum):
     MEDIUM = 1
     HARD = 2
     EXTREME = 3
+
+
+class Resolution(Enum):
+    '''Constants for the resolutions.'''
+    SMALL = Dimension(width=500, height=500)
+    MEDIUM = Dimension(width=700, height=700)
+
+
+class Language(Enum):
+    '''Constants for the languages.'''
+    ENGLISH = 0
+    GERMAN = 1

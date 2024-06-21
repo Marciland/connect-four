@@ -1,28 +1,51 @@
 '''entry point component'''
 from os import getcwd, path
 from tkinter import Button, PhotoImage
+from typing import TYPE_CHECKING
+
+from .dataclasses import Resolution
+
+if TYPE_CHECKING:
+    from components import Board
 
 
 class EntryPoint:  # pylint: disable=too-few-public-methods
     '''Entry for the coins above the board'''
 
-    def __init__(self, window, col_index) -> None:
-        self.window = window
+    def __init__(self, board, col_index) -> None:
+        self.board: Board = board
         self.col_index = col_index
-        cwd = getcwd()
-        self.images = {
-            'empty': PhotoImage(file=path.join(cwd, 'res/entry_point/empty_entry.png')),
-            'player1': PhotoImage(file=path.join(cwd, 'res/entry_point/purple_entry.png')),
-            'player2': PhotoImage(file=path.join(cwd, 'res/entry_point/yellow_entry.png'))
-        }
+        self.width = self.board.frame.window.settings.resolution.width // self.board.cols
+        self.height = self.width
+        self.images: dict[str, PhotoImage] = self._prepare_images()
         self._prepare_entry_point()
 
+    def _prepare_images(self) -> dict[str, PhotoImage]:
+        cwd = getcwd()
+        base_path = path.join(cwd, 'res', 'entry_point')
+        empty_image = PhotoImage(file=path.join(base_path,
+                                                'empty_entry.png'))
+        player1_image = PhotoImage(file=path.join(base_path,
+                                                  'purple_entry.png'))
+        player2_image = PhotoImage(file=path.join(base_path,
+                                                  'yellow_entry.png'))
+        if self.board.frame.window.settings.resolution == Resolution.SMALL.value:
+            empty_image = empty_image.subsample(7).zoom(5)
+            player1_image = player1_image.subsample(7).zoom(5)
+            player2_image = player2_image.subsample(7).zoom(5)
+        return {
+            'empty': empty_image,
+            'player1': player1_image,
+            'player2': player2_image
+        }
+
     def _prepare_entry_point(self) -> None:
-        self.widget = Button(self.window, image=self.images['empty'])
-        self.widget.place(x=100 * self.col_index,
+        self.widget = Button(master=self.board.frame,
+                             image=self.images['empty'])
+        self.widget.place(x=self.width * self.col_index,
                           y=0,
-                          width=100,
-                          height=100)
+                          width=self.width,
+                          height=self.height)
 
     def change_state(self, player: int) -> None:
         '''Changes the visuals based on current player.'''
