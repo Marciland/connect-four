@@ -1,13 +1,18 @@
 '''component class for managing the board.'''
+from typing import TYPE_CHECKING
+
 from assets import AbstractCell, Cell, EntryPoint, Position
 from helper import board_helper as BoardHelper
+
+if TYPE_CHECKING:
+    from components import GameFrame
 
 
 class Board:
     '''Board component for the connect four game.'''
 
-    def __init__(self, window) -> None:
-        self.window = window
+    def __init__(self, frame) -> None:
+        self.frame: GameFrame = frame
         self.rows = 6
         self.cols = 7
         self.entry_points: dict[int, EntryPoint] = {}
@@ -17,10 +22,13 @@ class Board:
     def _prepare_board(self) -> None:
         '''Creates an empty board by placing all necessary widgets.'''
         for col_index in range(0, self.cols, 1):
-            entry_point = EntryPoint(self.window, col_index)
+            entry_point = EntryPoint(board=self,
+                                     col_index=col_index)
             self.entry_points.update({col_index: entry_point})
             for row_index in range(0, self.rows, 1):
-                cell = Cell(self.window, col_index, row_index)
+                cell = Cell(board=self,
+                            col_index=col_index,
+                            row_index=row_index)
                 self.cells.update({Position(x=col_index, y=row_index): cell})
 
     def get_abstract_board(self) -> dict[Position, AbstractCell]:

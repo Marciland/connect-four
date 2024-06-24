@@ -1,9 +1,13 @@
 '''Contains a root window that renders the other components.'''
-from tkinter import Frame, Tk
+from os import getcwd, path
+from tkinter import Frame, PhotoImage, Tk
 
-from .game import ConnectFour
+from assets import Dimension
+
+from .game import GameFrame
 from .menu import MainMenu, MenuFrame, SettingsMenu
 from .settings import Settings
+from .translation import TranslationTable
 
 
 class MainWindow(Tk):
@@ -14,11 +18,14 @@ class MainWindow(Tk):
         self.withdraw()
         # show after rendering
         self.after(0, self.deiconify)
-        self.title('Vier Gewinnt | Connect Four')
         self.resizable(False, False)
         self.iconbitmap(r"res\icon.ico")
         self.current_frame: Frame = None
+        self.background_img: PhotoImage = PhotoImage(file=path.join(getcwd(),
+                                                                    'res/menu_background.png'))
         self.settings: Settings = settings
+        self.translation = TranslationTable(language=settings.language)
+        self.title(self.translation.get("title"))
         self.show_main_menu()
 
     def _get_starting_position(self, width: int, height: int) -> str:
@@ -49,15 +56,15 @@ class MainWindow(Tk):
     def _update_frame(self, frame: MenuFrame) -> None:
         '''Renders the given frame with its according size.'''
         if not self.current_frame:
-            self.geometry(self._get_starting_position(width=frame.dimension.width,
-                                                      height=frame.dimension.height))
+            self.geometry(self._get_starting_position(width=self.settings.resolution.width,
+                                                      height=self.settings.resolution.height))
         if self.current_frame:
             self.current_frame.destroy()
-            self.geometry(self._get_size(width=frame.dimension.width,
-                                         height=frame.dimension.height))
+            self.geometry(self._get_size(width=self.settings.resolution.width,
+                                         height=self.settings.resolution.height))
         frame.place(x=0, y=0,
-                    width=frame.dimension.width,
-                    height=frame.dimension.height)
+                    width=self.settings.resolution.width,
+                    height=self.settings.resolution.height)
         self.current_frame = frame
 
     def show_main_menu(self) -> None:
@@ -70,15 +77,15 @@ class MainWindow(Tk):
 
     def start_singleplayer(self) -> None:
         '''Starts a solo game vs the computer.'''
-        singleplayer: ConnectFour = ConnectFour(window=self)
+        singleplayer: GameFrame = GameFrame(window=self)
         singleplayer.solo = True
-        singleplayer.difficulty = self.get_difficulty()
+        singleplayer.difficulty = self.settings.difficulty
         singleplayer.new_game()
         self._update_frame(singleplayer)
 
     def start_multiplayer(self) -> None:
         '''Starts a 2 player versus.'''
-        multiplayer: ConnectFour = ConnectFour(window=self)
+        multiplayer: GameFrame = GameFrame(window=self)
         multiplayer.solo = False
         multiplayer.new_game()
         self._update_frame(multiplayer)
@@ -88,6 +95,15 @@ class MainWindow(Tk):
         self.settings.difficulty = difficulty
         self.settings.save()
 
-    def get_difficulty(self) -> int:
-        '''Gets the currently selected difficulty.'''
-        return self.settings.difficulty
+    def set_resolution(self, dimension: Dimension) -> None:
+        '''Changes the resolution to given value.'''
+        self.settings.resolution = dimension
+        self.geometry(self._get_starting_position(width=self.settings.resolution.width,
+                                                  height=self.settings.resolution.height))
+        self.settings.save()
+
+    def set_language(self, language: str) -> None:
+        '''Changes the language to given value.'''
+        self.settings.language = language
+        self.translation.current_language = language
+        self.settings.save()

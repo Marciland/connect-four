@@ -3,6 +3,6 @@ from components import MainWindow, Settings
 
 if __name__ == '__main__':
     settings = Settings()
-    settings.read()
-    window = MainWindow(settings)
-    window.mainloop()
+    if settings.read():
+        window = MainWindow(settings)
+        window.mainloop()

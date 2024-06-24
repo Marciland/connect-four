@@ -1,6 +1,12 @@
 '''Cell used on the board.'''
 from os import getcwd, path
 from tkinter import Label, PhotoImage
+from typing import TYPE_CHECKING
+
+from .dataclasses import Resolution
+
+if TYPE_CHECKING:
+    from components import Board
 
 
 class AbstractCell:  # pylint: disable=too-few-public-methods
@@ -24,26 +30,43 @@ class AbstractCell:  # pylint: disable=too-few-public-methods
 class Cell(AbstractCell):
     '''Cell component that represents a piece of the board.'''
 
-    def __init__(self, window, col_index: int, row_index: int) -> None:
+    def __init__(self, board, col_index: int, row_index: int) -> None:
         super().__init__(col_index=col_index,
                          row_index=row_index)
-        self.window = window
-        cwd = getcwd()
-        self.images = {
-            'empty': PhotoImage(file=path.join(cwd, 'res/cell/empty_cell.png')),
-            'player1': PhotoImage(file=path.join(cwd, 'res/cell/purple_cell.png')),
-            'player2': PhotoImage(file=path.join(cwd, 'res/cell/yellow_cell.png'))
-        }
+        self.board: Board = board
+        self.width = self.board.frame.window.settings.resolution.width // self.board.cols
+        self.height = self.width
+        self.images: dict[str, PhotoImage] = self._prepare_images()
         self._prepare_cell()
+
+    def _prepare_images(self) -> dict[str, PhotoImage]:
+        cwd = getcwd()
+        base_path = path.join(cwd, 'res', 'cell')
+        empty_image = PhotoImage(file=path.join(base_path,
+                                                'empty_cell.png'))
+        player1_image = PhotoImage(file=path.join(base_path,
+                                                  'purple_cell.png'))
+        player2_image = PhotoImage(file=path.join(base_path,
+                                                  'yellow_cell.png'))
+        if self.board.frame.window.settings.resolution == Resolution.SMALL.value:
+            empty_image = empty_image.subsample(7).zoom(5)
+            player1_image = player1_image.subsample(7).zoom(5)
+            player2_image = player2_image.subsample(7).zoom(5)
+        return {
+            'empty': empty_image,
+            'player1': player1_image,
+            'player2': player2_image
+        }
 
     def _prepare_cell(self) -> None:
         '''Creates a new cell in its initial state.'''
-        self.widget = Label(self.window, image=self.images['empty'])
-        self.widget.place(x=100 * self.col_index,
-                          # y + 100 because of the EntryPoints above
-                          y=100 + 100 * self.row_index,
-                          width=100,
-                          height=100)
+        self.widget = Label(master=self.board.frame,
+                            image=self.images['empty'])
+        self.widget.place(x=self.width * self.col_index,
+                          # +1 because of the EntryPoints above
+                          y=self.height * (self.row_index + 1),
+                          width=self.width,
+                          height=self.height)
 
     def change_state(self, player: int) -> None:
         '''Changes the rendered image based on player given.'''
