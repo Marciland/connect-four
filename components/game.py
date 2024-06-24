@@ -93,7 +93,7 @@ class GameFrame(Frame):
         end_message = EndMessage(frame=self,
                                  title=title,
                                  remis=remis)
-        if end_message.response:
+        if end_message.replay:
             self.new_game()
-            return
-        self.window.show_main_menu()
+        else:
+            self.window.show_main_menu()

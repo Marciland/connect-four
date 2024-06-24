@@ -13,7 +13,7 @@ class EndMessage(Dialog):
     def __init__(self, frame, title: str, remis: bool) -> None:
         self.frame: GameFrame = frame
         self.msg = self._create_message(remis)
-        self.response: bool = False
+        self.replay: bool = False
         super().__init__(parent=frame, title=title)
 
     def _create_message(self, remis: bool) -> str:
@@ -46,5 +46,5 @@ class EndMessage(Dialog):
         box.pack()
 
     def _ok(self):
-        self.response = True
+        self.replay = True
         self.ok()
