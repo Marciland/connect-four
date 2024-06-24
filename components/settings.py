@@ -13,7 +13,7 @@ class Settings:
         self.path = path.join(getcwd(), 'config.json')
         self.difficulty: int = Difficulty.EASY.value
         self.resolution: Dimension = Resolution.MEDIUM.value
-        self.language: Language = Language.ENGLISH.name
+        self.language: Language = Language.ENGLISH.value
         self.last_ip: str = ''
 
     def _dump(self) -> bool:

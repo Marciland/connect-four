@@ -200,14 +200,14 @@ class SettingsMenu(MenuFrame):  # pylint: disable=too-many-ancestors
         self._configure_menu_button(button=english,
                                     text=english_text,
                                     position=0)
-        self.language_buttons.update({Language.ENGLISH.name: english})
+        self.language_buttons.update({Language.ENGLISH.value: english})
         german = Button(master=self,
                         command=lambda: self._change_language(Language.GERMAN))
         german_text = self.window.translation.get('german')
         self._configure_menu_button(button=german,
                                     text=german_text,
                                     position=1)
-        self.language_buttons.update({Language.GERMAN.name: german})
+        self.language_buttons.update({Language.GERMAN.value: german})
         self._configure_toggle_buttons(self.language_buttons,
                                        self.font)
         self._set_language_button()
@@ -234,10 +234,10 @@ class SettingsMenu(MenuFrame):  # pylint: disable=too-many-ancestors
         self.window.current_frame.show_resolution_settings()
 
     def _change_language(self, language: Language) -> None:
-        self.window.set_language(language.name)
+        self.window.set_language(language.value)
         self.window.title(self.window.translation.get("title"))
         for _language, button in self.language_buttons.items():
-            if _language == language.name:
+            if _language == language.value:
                 button.configure(state='disabled')
             else:
                 button.configure(state='active')

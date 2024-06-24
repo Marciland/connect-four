@@ -9,14 +9,14 @@ from assets import Language
 class TranslationTable:
     '''Contains all translations and knows what language is selected.'''
 
-    def __init__(self, language: Language = Language.ENGLISH.name) -> None:
+    def __init__(self, language: Language = Language.ENGLISH.value) -> None:
         self.current_language: Language = language
         self.base_path: str = path.join(getcwd(), 'res', 'lang')
         self.translations: dict[str, dict] = {}
-        self.translations[Language.ENGLISH.name] = self._read_translation(path.join(self.base_path,
-                                                                                    'en.json'))
-        self.translations[Language.GERMAN.name] = self._read_translation(path.join(self.base_path,
-                                                                                   'de.json'))
+        self.translations[Language.ENGLISH.value] = self._read_translation(path.join(self.base_path,
+                                                                                     'en.json'))
+        self.translations[Language.GERMAN.value] = self._read_translation(path.join(self.base_path,
+                                                                                    'de.json'))
 
     def _read_translation(self, file_path: str) -> dict[str, str]:
         with open(file=file_path, mode='r', encoding='utf-8') as file_handle:
@@ -33,4 +33,4 @@ class TranslationTable:
         try:
             return self.translations[self.current_language][key]
         except KeyError:
-            return self.translations[Language.ENGLISH.name][key]
+            return self.translations[Language.ENGLISH.value][key]

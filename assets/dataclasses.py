@@ -40,5 +40,5 @@ class Resolution(Enum):
 
 class Language(Enum):
     '''Constants for the languages.'''
-    ENGLISH = 0
-    GERMAN = 1
+    ENGLISH = 'en'
+    GERMAN = 'de'
