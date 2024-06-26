@@ -42,3 +42,11 @@ class Language(Enum):
     '''Constants for the languages.'''
     ENGLISH = 'en'
     GERMAN = 'de'
+
+
+class MenuPosition(Enum):
+    '''Constants for the menu button positions.'''
+    TOP = 0
+    MIDDLE = 1
+    BOTTOM = 2
+    BACK = 3
