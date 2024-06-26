@@ -2,6 +2,15 @@
     "title": "Vier Gewinnt",
     "singleplayer": "Einzelspieler",
     "multiplayer": "Mehrspieler",
+    "multiplayer_local": "Lokales Spiel",
+    "multiplayer_online": "Online Spiel",
+    "multiplayer_online_ai": "Online BotWar",
+    "multiplayer_host": "Spiel hosten",
+    "multiplayer_host_msg": "Warte auf anderen Spieler",
+    "multiplayer_join": "Beitreten",
+    "multiplayer_join_msg": "Suche Spiel...",
+    "multiplayer_get_move": "Warte...",
+    "multiplayer_get_move_msg": "Warte auf Gegner...",
     "settings": "Einstellungen",
     "exit": "Spiel Verlassen",
     "difficulty": "Schwierigkeit",
@@ -22,7 +31,10 @@
     "draw": "Unentschieden!\nNochmal spielen?",
     "end_title": "Spiel beendet!",
     "retry": "Ja",
-    "cancel": "Nein",
+    "no": "Nein",
     "small_res": "Klein",
-    "medium_res": "Mittel"
+    "medium_res": "Mittel",
+    "bad_ip_title": "Ungültige IP",
+    "bad_ip_msg": "Die IP ist ungültig!\nBitte korrigiere die Eingabe!",
+    "cancel": "Abbrechen"
 }
