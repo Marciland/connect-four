@@ -21,13 +21,11 @@ class MenuFrame(Frame):
                                        size=27)
                 self.small_font: Font = Font(family='Cooper Black',
                                              size=21)
-                self.background_img = self.window.background_img.subsample(7)
             case Resolution.MEDIUM.value:
                 self.font: Font = Font(family='Cooper Black',
                                        size=37)
                 self.small_font: Font = Font(family='Cooper Black',
                                              size=31)
-                self.background_img = self.window.background_img.subsample(5)
         self.button_height = self.window.settings.resolution.height // 7
         self.button_width = self.window.settings.resolution.width * 4 // 7
         self.button_margin_y = self.button_height // 2
@@ -37,7 +35,7 @@ class MenuFrame(Frame):
     def _prepare_menu(self) -> None:
         self.background = Label(master=self,
                                 name='background',
-                                image=self.background_img)
+                                image=self.window.resources.images['main']['bg'])
         self.background.place(x=0, y=0,
                               width=self.window.settings.resolution.width,
                               height=self.window.settings.resolution.height)
@@ -71,6 +69,7 @@ class SubMenu(MenuFrame):
             child.place_forget()
 
     def _enter_settings_sub_menu(self) -> None:
+        self._enter_sub_menu()
         for child in self.winfo_children():
             if child.winfo_name() == 'back':
                 child.configure(text=self.window.translation.get('save'))
@@ -86,10 +85,11 @@ class SubMenu(MenuFrame):
                                     text=back_text)
         self._place_menu_button(button=back, position=MenuPosition.BACK)
 
-    def show_sub_menu(self, sub_menu: 'SubMenu', args=None) -> None:
-        '''needs to be called from different frame, thus not prefixed with _'''
+    def _show_sub_menu(self, sub_menu: 'SubMenu') -> None:
         self._enter_sub_menu()
-        if args is None:
-            self._enter_settings_sub_menu()
-            return sub_menu(window=self.window)
-        return sub_menu(self.window, args)
+        return sub_menu(window=self.window)
+
+    def show_settings_sub_menu(self, sub_menu: 'SubMenu') -> None:
+        '''needs to be called from different frame, thus not prefixed with _'''
+        self._enter_settings_sub_menu()
+        return sub_menu(window=self.window)

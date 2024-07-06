@@ -21,12 +21,12 @@ class GameFrame(Frame):
                  communication: Communication = None) -> None:
         super().__init__(master=window)
         self.board: Board = None
-        self.solo = solo
-        self.difficulty = difficulty
-        self.com = communication
+        self.solo: bool = solo
+        self.difficulty: int = difficulty
+        self.com: Communication = communication
         self.window: MainWindow = window
-        self.current_player = 1
-        self.player_turn = True
+        self.current_player: int = 1
+        self.player_turn: bool = True
 
     def new_game(self) -> None:
         '''Sets up a new game.'''
@@ -47,19 +47,9 @@ class GameFrame(Frame):
                 return True
         return False
 
-    def _get_next_player(self) -> int:
-        '''
-        Depending on current player, the next current player is defined.
-        0 = bot
-        1 = player1
-        2 = player2
-        '''
+    def _change_turns(self) -> None:
         self.player_turn = not self.player_turn
-        if self.current_player in [0, 2]:
-            return 1
-        if self.solo:
-            return 0
-        return 2
+        self.current_player = 2 if self.current_player == 1 else 1
 
     def make_move(self, col_index: int) -> None:
         '''
@@ -83,11 +73,11 @@ class GameFrame(Frame):
                                           cols=self.board.cols,
                                           rows=self.board.rows):
             return self._end_game(remis=False)
-        self.current_player = self._get_next_player()
+        self._change_turns()
         if self.com and not self.player_turn:
             self.window.update()
             return self.make_move(self.com.get_move())
-        if self.current_player == 0:
+        if self.solo and not self.player_turn:
             start = perf_counter()
             possible_moves = self.board.get_possible_moves()
             move = BotHelper.calculate_next_move(difficulty=self.difficulty,

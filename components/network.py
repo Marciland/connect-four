@@ -35,7 +35,7 @@ class Communication:
 
     def _wait_for_connection(self) -> None:
         server_socket = socket(family=AF_INET, type=SOCK_STREAM)
-        server_socket.bind(('127.0.0.1', self._port))
+        server_socket.bind(('0.0.0.0', self._port))
         server_socket.listen()
         server_socket.settimeout(0.1)
         while not self._connected_event.is_set():

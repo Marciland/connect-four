@@ -8,7 +8,11 @@ Therefore this is not maintained by any means and might not run as expected.
 
 ## How to run
 
-wip
+> python main.py
+
+quite simple right?
+
+There are no dependencies. Tested this on python 3.10.
 
 ## Contributors
 

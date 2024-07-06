@@ -1,12 +1,12 @@
 '''Contains a root window that renders the other components.'''
-from os import getcwd, path
-from tkinter import Frame, PhotoImage, Tk
+from tkinter import Frame, Tk
 
 from assets import Dimension
 
 from .game import GameFrame
 from .menu import MainMenu, MenuFrame, MultiplayerMenu, SettingsMenu
 from .network import Communication
+from .resource_loader import Resources
 from .settings import Settings
 from .translation import TranslationTable
 
@@ -22,9 +22,9 @@ class MainWindow(Tk):
         self.resizable(False, False)
         self.iconbitmap(r"res\icon.ico")
         self.current_frame: Frame = None
-        self.background_img: PhotoImage = PhotoImage(file=path.join(getcwd(),
-                                                                    'res/menu_background.png'))
         self.settings: Settings = settings
+        self.resources: Resources = Resources()
+        self.resources.prepare_images(self.settings.resolution)
         self.translation = TranslationTable(language=settings.language)
         self.title(self.translation.get("title"))
         self.show_main_menu()
@@ -123,6 +123,7 @@ class MainWindow(Tk):
     def set_resolution(self, dimension: Dimension) -> None:
         '''Changes the resolution to given value.'''
         self.settings.resolution = dimension
+        self.resources.prepare_images(dimension)
         self.geometry(self._get_starting_position(width=self.settings.resolution.width,
                                                   height=self.settings.resolution.height))
         self.settings.save()
