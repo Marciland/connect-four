@@ -1,4 +1,4 @@
-There are 3 difficulties.
+There are 4 difficulties.
 
 0 = Easy
 Easy just throws random coins without any logic or reasoning.
@@ -14,3 +14,6 @@ This should result in a win for the bot or a draw.
 
 3 = Extreme
 Extreme acts like hard, but will make safer moves by checking if a move would help the player win.
+
+Btw the bot is still stupid as this is not calculating any moves ahead.
+Placing in the middle is still a viable strategy against it.

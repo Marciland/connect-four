@@ -58,7 +58,7 @@ class SettingsMenu(SubMenu):
 
     def _prepare_settings_menu(self) -> None:
         difficulty = Button(master=self,
-                            command=lambda: self.show_sub_menu(DifficultyMenu))
+                            command=lambda: self.show_settings_sub_menu(DifficultyMenu))
         difficulty_text = self.window.translation.get('difficulty')
         self._configure_menu_button(difficulty,
                                     font=self.font,
@@ -66,7 +66,7 @@ class SettingsMenu(SubMenu):
         self._place_menu_button(button=difficulty,
                                 position=MenuPosition.TOP)
         resolution = Button(master=self,
-                            command=lambda: self.show_sub_menu(ResolutionMenu))
+                            command=lambda: self.show_settings_sub_menu(ResolutionMenu))
         resolution_text = self.window.translation.get('resolution')
         self._configure_menu_button(resolution,
                                     font=self.font,
@@ -74,7 +74,7 @@ class SettingsMenu(SubMenu):
         self._place_menu_button(button=resolution,
                                 position=MenuPosition.MIDDLE)
         language = Button(master=self,
-                          command=lambda: self.show_sub_menu(LanguageMenu))
+                          command=lambda: self.show_settings_sub_menu(LanguageMenu))
         language_text = self.window.translation.get('language')
         self._configure_menu_button(language,
                                     font=self.font,
@@ -184,7 +184,7 @@ class ResolutionMenu(SubMenu):
         self.window.set_resolution(resolution.value)
         self.window.show_settings_menu()
         # call the "next" frame as self will be destroyed when changing resolutions
-        self.window.current_frame.show_sub_menu(ResolutionMenu)
+        self.window.current_frame.show_settings_sub_menu(ResolutionMenu)
 
     def _set_resolution_button(self):
         match self.window.settings.resolution:
@@ -253,7 +253,6 @@ class MultiplayerMenu(SubMenu):
     Choose from:
         - local
         - online
-        - online "bot fight"
     '''
 
     def __init__(self, window) -> None:
@@ -270,29 +269,20 @@ class MultiplayerMenu(SubMenu):
         self._place_menu_button(button=local,
                                 position=MenuPosition.TOP)
         online = Button(master=self,
-                        command=lambda: self.show_sub_menu(MultiplayerSubMenu, False))
+                        command=lambda: self._show_sub_menu(MultiplayerSubMenu))
         online_text = self.window.translation.get('multiplayer_online')
         self._configure_menu_button(button=online,
                                     font=self.font,
                                     text=online_text)
         self._place_menu_button(button=online,
                                 position=MenuPosition.MIDDLE)
-        online_ai = Button(master=self,
-                           command=lambda: self.show_sub_menu(MultiplayerSubMenu, True))
-        online_ai_text = self.window.translation.get('multiplayer_online_ai')
-        self._configure_menu_button(button=online_ai,
-                                    font=self.font,
-                                    text=online_ai_text)
-        self._place_menu_button(button=online_ai,
-                                position=MenuPosition.BOTTOM)
 
 
 class MultiplayerSubMenu(SubMenu):
     '''Submenu for selecting the multiplayer mode.'''
 
-    def __init__(self, window, bot_war: bool) -> None:
+    def __init__(self, window) -> None:
         super().__init__(window=window)
-        self.bot_war = bot_war
         self.validation = self.register(self._validate_entry)
         self._prepare_multiplayer_sub_menu()
 

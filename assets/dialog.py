@@ -21,12 +21,12 @@ class EndMessage(Dialog):
 
     def _create_message(self, remis: bool) -> str:
         match self.frame.current_player:
-            case 0:
-                player = 'computer'
             case 1:
                 player = 'player1'
             case 2:
                 player = 'player2'
+        if self.frame.solo and not self.frame.player_turn:
+            player = 'computer'
         player = self.frame.window.translation.get(player)
         msg = player + self.frame.window.translation.get('replay')
         if remis:
